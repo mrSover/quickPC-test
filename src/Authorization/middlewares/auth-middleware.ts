@@ -2,9 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import ApiError from '../exceptions/api-error';
 import tokenService from '../service/token-service';
 
-// Розширення типу Request для додавання властивості user
 interface CustomRequest extends Request {
-    user?: any; // Вказати правильний тип для userData, якщо відомо
+    user?: any; 
 }
 
 const authMiddleware = (req: CustomRequest, res: Response, next: NextFunction) => {
