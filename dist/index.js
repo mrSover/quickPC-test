@@ -17,15 +17,14 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const index_1 = __importDefault(require("./Authorization/router/index"));
-const error_middleware_1 = __importDefault(require("./Authorization/middlewares/error-middleware"));
+const index_1 = __importDefault(require("./router/index"));
+const error_middleware_1 = __importDefault(require("./middlewares/error-middleware"));
 const PORT = Number(process.env.PORT) || 5000;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)());
-app.use('/authapi', index_1.default);
-app.use('/marketapi', index_1.default);
+app.use('/api', index_1.default);
 app.use(error_middleware_1.default);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
