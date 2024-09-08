@@ -3,6 +3,7 @@ import { body } from 'express-validator';
 import userController from '../controller/auth-controller';
 import authMiddleware from '../middlewares/auth-middleware';
 import roleMiddleware from '../middlewares/role-middleware';
+import marketController from '../controller/market-controller';
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.post('/logout', userController.logout);
 router.get('/activate/:link', userController.activate);
 router.get('/refresh', userController.refresh);
 router.get('/users', authMiddleware, roleMiddleware(["ADMIN"]), userController.getUsers);
+router.get('/products', marketController.getProductsbyCategory);
 
 export default router;
