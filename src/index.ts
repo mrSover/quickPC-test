@@ -3,8 +3,8 @@ import express, { Express } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
-import router from './Authorization/router/index';
-import errorMiddleware from './Authorization/middlewares/error-middleware';
+import router from './router/index';
+import errorMiddleware from './middlewares/error-middleware';
 
 const PORT: number = Number(process.env.PORT) || 5000;
 const app: Express = express();
@@ -12,8 +12,7 @@ const app: Express = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
-app.use('/authapi', router);
-app.use('/marketapi', router)
+app.use('/api', router);
 app.use(errorMiddleware);
 
 const start = async () => {
