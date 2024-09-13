@@ -19,6 +19,6 @@
       "allowSyntheticDefaultImports": true,      
       "noImplicitAny": true                      
     },
-    "include": ["src", "controller", "dtos", "exceptions", "middlewares", "models", "router", "service", "index.ts"],                          
+    "include": ["src", "controller", "dtos", "exceptions", "middlewares", "models", "router", "service", "src/index.ts"],                          
     "exclude": ["node_modules", "dist"]          
   }
