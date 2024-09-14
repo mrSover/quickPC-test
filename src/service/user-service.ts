@@ -34,12 +34,12 @@ class UserService {
         });
     
         const tokens: Tokens = tokenService.generateTokens({
-            user: userDto.id,
+            user: userDto._id,
             role: userDto.role, // Додаємо роль до payload
             refreshToken: '',
         });
     
-        await tokenService.saveToken(userDto.id, tokens.refreshToken);
+        await tokenService.saveToken(userDto._id, tokens.refreshToken);
     
         return { ...tokens, user: userDto };
     }
@@ -73,13 +73,13 @@ class UserService {
     
         // Згенеруйте токени
         const tokens: Tokens = tokenService.generateTokens({
-            user: userDto.id,
+            user: userDto._id,
             role: userDto.role, // Додаємо роль до payload
             refreshToken: '', // Потрібно згенерувати refreshToken
         });
     
         // Збережіть refreshToken у базі даних
-        await tokenService.saveToken(userDto.id, tokens.refreshToken);
+        await tokenService.saveToken(userDto._id, tokens.refreshToken);
     
         return { ...tokens, user: userDto };
     }
@@ -113,11 +113,11 @@ class UserService {
         });
 
         const tokens: Tokens = tokenService.generateTokens({
-            user: userDto.id,
+            user: userDto._id,
             refreshToken: '', // Потрібно надати значення для refreshToken
         });
 
-        await tokenService.saveToken(userDto.id, tokens.refreshToken);
+        await tokenService.saveToken(userDto._id, tokens.refreshToken);
         return { ...tokens, user: userDto };
     }
 

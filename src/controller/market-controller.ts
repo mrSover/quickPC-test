@@ -42,7 +42,7 @@ class MarketController {
 
     async getComponentsByFilters (req: Request, res: Response, next: NextFunction) {
         try {
-            const priceBorders: Array<Number> = [req.body.minPrice, req.body.maxPrice] 
+            const priceBorders: Array<number> = [req.body.minPrice, req.body.maxPrice] 
             const type: string = req.body.type;
             const sortObj: ISortObj = { [req.body.sortValue ]: req.body.sortDirection};
             const products = await marketService.getComponentsByFilters(priceBorders, sortObj, type)
@@ -57,8 +57,6 @@ class MarketController {
         try {
             const componentData = req.body as IComponent;
             const file = req.file;
-    
-            console.log('File:', file);  // Check if file is present
     
             if (!file) {
                 return res.status(400).json({ message: 'No file uploaded' });
@@ -80,6 +78,23 @@ class MarketController {
         } catch (error) {
             console.error('Failed to create component:', error);
             res.status(500).json({ message: 'Failed to create component' });
+        }
+    }
+
+    async getProduct(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { id } = req.params;  // Отримуємо ID з параметрів запиту
+
+            // Викликаємо сервіс для отримання товару
+            const product = await marketService.getProductById(id);
+
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found' });
+            }
+
+            return res.json(product);
+        } catch (error) {
+            next(error);  // Обробка помилок
         }
     }
 

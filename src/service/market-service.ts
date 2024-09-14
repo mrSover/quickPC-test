@@ -3,6 +3,7 @@ import { ComponentModel, IComponent } from '../models/component-model';
 import { ComputerModel, IComputer } from '../models/computer-model';
 import { ProductModel } from '../models/product-model';
 import { ISortObj } from '../models/custom-types';
+import ComponentCatalogDto from '../dtos/component-catalog-dto';
 
 class MarketService {
 
@@ -35,30 +36,42 @@ class MarketService {
 
       const computers = await ComputerModel
         .find(query)
+        .populate('components')
         .sort(sortObj);
     
       return computers;
     }
 
     
-    async getComponentsByFilters (priceBorders: Array<Number>, sortObj: ISortObj, type?: string) {
-        const query: any = {
-            price: {
+    async getComponentsByFilters(priceBorders: Array<number>, sortObj: ISortObj, type?: string) {
+      const query: any = {
+          price: {
               $gte: priceBorders[0], 
-              $lte: priceBorders[1]   
-            },
-          };
-        
-          if (type) {
-            query.type = type;
-          }
+              $lte: priceBorders[1]
+          },
+      };
+      
+      if (type) {
+          query.type = type;
+      }
+  
+      const components = await ComponentModel
+          .find(query)
+          .populate('item_info')
+          .sort(sortObj);
+  
+      const componentDtos = components.map(component => new ComponentCatalogDto(component));
+  
+      return componentDtos;
+  }
 
-          const components = await ComponentModel
-            .find(query)
-            .sort(sortObj);
-        
-          return components;
-    }
+  async getProductById(id: string) {
+    const Product = await ProductModel
+        .findOne({_id: id})
+        .populate('item_id')
+
+        return Product;
+  }
 
     async createComponent(componentData: IComponent) {
       const component = new ComponentModel(componentData);
@@ -84,7 +97,6 @@ class MarketService {
 
         return savedComputer;
     }
-
 }
 
 export default new MarketService();

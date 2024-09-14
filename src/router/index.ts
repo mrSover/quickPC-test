@@ -23,6 +23,7 @@ router.get('/hotproducts', marketController.getHotProducts);
 router.get('/category', marketController.getProductsbyCategory);
 router.get('/computer', marketController.getComputersByFilters);
 router.get('/component', marketController.getComponentsByFilters);
+router.get('/product/:id', marketController.getProduct);
 router.post('/component', uploadSingleFile, marketController.createComponent);
 router.post('/computer', uploadSingleFile, marketController.createComponent);
 

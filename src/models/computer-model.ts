@@ -6,18 +6,21 @@ interface IComputer {
   img: string;
   description: string;
   is_hot: boolean;
-  components: Schema.Types.ObjectId[];
+  components: { name: string; value: string }[]; // Масив ключ-значення для компонентів
 }
 
 const ComputerSchema = new Schema<IComputer>({
+  name: String,
+  price: Number,
+  img: String,
+  description: String,
+  is_hot: Boolean,
+  components: [{ 
     name: String,
-    price: Number,
-    img: String,
-    description: String,
-    is_hot: Boolean,
-    components: [{ type: Schema.Types.ObjectId, ref: 'Component' }],
-  });
+    value: String  
+  }]
+});
 
-  const ComputerModel = model<IComputer>('Computer', ComputerSchema);
+const ComputerModel = model<IComputer>('Computer', ComputerSchema);
 
-export { ComputerModel, IComputer};
+export { ComputerModel, IComputer };
