@@ -1,14 +1,14 @@
 import { Schema, model, Document } from 'mongoose';
 
-interface IProduct extends Document {
-    category: 'Computer' | 'Component';
+interface IProduct {
+    category: 'Computer' | 'Component' | 'Monitor' | 'Periphery';
     item_id: Schema.Types.ObjectId;
 }
 
 const ProductSchema = new Schema<IProduct>({
     category: {
         type: String,
-        enum: ['Computer', 'Component'],
+        enum: ['Computer', 'Component', 'Monitor', 'Periphery'],
         required: true,
     },
     item_id: {
@@ -20,4 +20,4 @@ const ProductSchema = new Schema<IProduct>({
 
 const ProductModel = model<IProduct>('Product', ProductSchema);
 
-export { ProductModel };
+export { ProductModel, IProduct};

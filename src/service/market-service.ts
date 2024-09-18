@@ -3,75 +3,61 @@ import { ComponentModel, IComponent } from '../models/component-model';
 import { ComputerModel, IComputer } from '../models/computer-model';
 import { ProductModel } from '../models/product-model';
 import { ISortObj } from '../models/custom-types';
-import ComponentCatalogDto from '../dtos/component-catalog-dto';
+import ProductCatalog from '../dtos/product-catalog-dto';
 
 class MarketService {
 
-    async getHotProducts () {
-        const hotProducts = await ProductModel
+async getAllProducts(sortObj: ISortObj) {
+    const products = await ProductModel
         .find()
         .populate('item_id')
-        .where('is_hot')
-        console.log (hotProducts)
-
-        return hotProducts;
-   }
-
-   async getProductsbyCategory(category: string, sortObj: ISortObj) {
-    const products = await ProductModel
-        .find({ category: category })
-        .populate('item_id')
-        .sort(sortObj); 
-        console.log (products)
-    return products;
-}
-
-   async getComputersByFilters (priceBorders: Array<Number>, sortObj: ISortObj) {
-    const query: any = {
-        price: {
-          $gte: priceBorders[0], 
-          $lte: priceBorders[1]   
-        },
-      };
-
-      const computers = await ComputerModel
-        .find(query)
-        .populate('components')
         .sort(sortObj);
-    
-      return computers;
+
+        
+      const productDTO = this.removeNesting(products).map((product: any) => new ProductCatalog(product));
+      console.log('iaojginaujighnaui')
+      return productDTO;
     }
 
-    
-    async getComponentsByFilters(priceBorders: Array<number>, sortObj: ISortObj, type?: string) {
-      const query: any = {
-          price: {
-              $gte: priceBorders[0], 
-              $lte: priceBorders[1]
-          },
-      };
-      
-      if (type) {
-          query.type = type;
-      }
-  
-      const components = await ComponentModel
-          .find(query)
-          .populate('item_info')
-          .sort(sortObj);
-  
-      const componentDtos = components.map(component => new ComponentCatalogDto(component));
-  
-      return componentDtos;
+async getProductById(id: string) {
+  const product = await ProductModel
+      .findOne({_id: id})
+      .populate('item_id')
+
+      return this.removeNesting(product);
+}
+
+async getProductsByFilters(
+  category: string, 
+  type?: string, 
+  priceBorders?: [number, number], 
+  sortObj?: ISortObj
+) {
+
+  const products = await ProductModel
+      .find({ category })
+      .populate('item_id') 
+      .sort(sortObj);
+
+  let filteredProducts = products;
+
+  if (priceBorders) {
+    filteredProducts = filteredProducts.filter(product => {
+      const item = product.item_id as any;
+      return item.price >= priceBorders[0] && item.price <= priceBorders[1];
+    });
   }
 
-  async getProductById(id: string) {
-    const Product = await ProductModel
-        .findOne({_id: id})
-        .populate('item_id')
-
-        return Product;
+  if (type) {
+    filteredProducts = filteredProducts.filter(product => {
+      const item = product.item_id as any;
+      return item.type === type;
+    });
   }
+  const productDTO = this.removeNesting(filteredProducts).map((product: any) => new ProductCatalog(product));
+  return productDTO
+}
+
 
     async createComponent(componentData: IComponent) {
       const component = new ComponentModel(componentData);
@@ -96,6 +82,26 @@ class MarketService {
           await product.save();
 
         return savedComputer;
+    }
+
+    removeNesting(data: any | any[]) {
+      if (Array.isArray(data)) {
+        return data.map(item => {
+          const itemData = JSON.parse(JSON.stringify(item.item_id as any));
+          return {
+            _id: item._id,
+            category: item.category,
+            ...itemData
+          };
+        });
+      } else {
+        const itemData = JSON.parse(JSON.stringify(data.item_id as any));
+        return {
+          _id: data._id,
+          category: data.category,
+          ...itemData
+        };
+      }
     }
 }
 

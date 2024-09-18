@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
-import { Types } from 'mongoose';
 
-export default class ComponentCatalogDto {
+export default class ProductCatalog {
     _id: ObjectId
+    category: string
     name: string;
     type: string;
     price: number;
@@ -11,8 +11,9 @@ export default class ComponentCatalogDto {
     img: string;
 
 
-    constructor(model: ComponentCatalogDto) {
+    constructor(model: ProductCatalog) {
         this._id = model._id
+        this.category = model.category
         this.name = model.name
         this.type = model.type
         this.price = model.price
