@@ -13,18 +13,15 @@ async getAllProducts(sortObj: ISortObj) {
         .populate('item_id')
         .sort(sortObj);
 
-        
-      const productDTO = this.removeNesting(products).map((product: any) => new ProductCatalog(product));
-      console.log('iaojginaujighnaui')
-      return productDTO;
+      return this.removeNesting(products).map((product: any) => new ProductCatalog(product));
     }
 
 async getProductById(id: string) {
   const product = await ProductModel
-      .findOne({_id: id})
+      .find({_id: id})
       .populate('item_id')
 
-      return this.removeNesting(product);
+      return this.removeNesting(product).map((product: any) => new ProductCatalog(product));
 }
 
 async getProductsByFilters(
@@ -54,8 +51,8 @@ async getProductsByFilters(
       return item.type === type;
     });
   }
-  const productDTO = this.removeNesting(filteredProducts).map((product: any) => new ProductCatalog(product));
-  return productDTO
+
+  return this.removeNesting(filteredProducts).map((product: any) => new ProductCatalog(product));
 }
 
 
