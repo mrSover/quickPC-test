@@ -18,37 +18,52 @@ class MarketController {
     
     async getProductsbyCategory(req: Request, res: Response, next: NextFunction) {
         try {
-            const category: string = req.body.category
-            const sortObj: ISortObj = { [req.body.sortValue ]: req.body.sortDirection};
-            const products = await marketService.getProductsbyCategory(category, sortObj)
-            return res.status(201).json(products)
+            const category: string = req.query.category as string;
+            const sortValue: string = req.query.sortValue as string;
+            const sortDirection: 1 | -1 = Number(req.query.sortDirection) as 1 | -1; // Пряме використання переданого значення
+            const sortObj: ISortObj = { [sortValue]: sortDirection };
+    
+            const products = await marketService.getProductsbyCategory(category, sortObj);
+            return res.status(200).json(products);
         } catch (e) {
-            res.status(500).json({ message: 'Failed to get data'});
+            res.status(500).json({ message: 'Failed to get data' });
             next(e);
         }
     }
-
-    async getComputersByFilters (req: Request, res: Response, next: NextFunction) {
+    
+    // Отримання комп'ютерів за фільтрами
+    async getComputersByFilters(req: Request, res: Response, next: NextFunction) {
         try {
-            const priceBorders: Array<Number> = [req.body.minPrice, req.body.maxPrice] 
-            const sortObj: ISortObj = { [req.body.sortValue ]: req.body.sortDirection};
-            const computers = await marketService.getComputersByFilters(priceBorders, sortObj)
-            return res.status(201).json(computers)
+            const minPrice: number = Number(req.query.minPrice);
+            const maxPrice: number = Number(req.query.maxPrice);
+            const priceBorders: Array<number> = [minPrice, maxPrice];
+            const sortValue: string = req.query.sortValue as string;
+            const sortDirection: 1 | -1 = Number(req.query.sortDirection) as 1 | -1; // Пряме використання переданого значення
+            const sortObj: ISortObj = { [sortValue]: sortDirection };
+    
+            const computers = await marketService.getComputersByFilters(priceBorders, sortObj);
+            return res.status(200).json(computers);
         } catch (e) {
-            res.status(500).json({ message: 'Failed to get data'});
+            res.status(500).json({ message: 'Failed to get data' });
             next(e);
         }
     }
-
-    async getComponentsByFilters (req: Request, res: Response, next: NextFunction) {
+    
+    // Отримання компонентів за фільтрами
+    async getComponentsByFilters(req: Request, res: Response, next: NextFunction) {
         try {
-            const priceBorders: Array<number> = [req.body.minPrice, req.body.maxPrice] 
-            const type: string = req.body.type;
-            const sortObj: ISortObj = { [req.body.sortValue ]: req.body.sortDirection};
-            const products = await marketService.getComponentsByFilters(priceBorders, sortObj, type)
-            return res.status(201).json(products)
+            const minPrice: number = Number(req.query.minPrice);
+            const maxPrice: number = Number(req.query.maxPrice);
+            const priceBorders: Array<number> = [minPrice, maxPrice];
+            const type: string = req.query.type as string;
+            const sortValue: string = req.query.sortValue as string;
+            const sortDirection: 1 | -1 = Number(req.query.sortDirection) as 1 | -1; // Пряме використання переданого значення
+            const sortObj: ISortObj = { [sortValue]: sortDirection };
+    
+            const products = await marketService.getComponentsByFilters(priceBorders, sortObj, type);
+            return res.status(200).json(products);
         } catch (e) {
-            res.status(500).json({ message: 'Failed to get data'});
+            res.status(500).json({ message: 'Failed to get data' });
             next(e);
         }
     }
