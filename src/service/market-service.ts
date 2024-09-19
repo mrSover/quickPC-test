@@ -8,11 +8,13 @@ import ProductSingle from '../dtos/product-item-dto';
 
 class MarketService {
 
-async getAllProducts(sortObj: ISortObj) {
+async getAllProducts(sortObj: ISortObj, limit: number, skip: number) {
     const products = await ProductModel
         .find()
         .populate('item_id')
-        .sort(sortObj);
+        .sort(sortObj)
+        .skip(skip)
+        .limit(limit)
 
       return this.removeNesting(products).map((product: any) => new ProductCatalog(product));
     }
@@ -27,36 +29,37 @@ async getProductById(id: string) {
 
 async getProductsByFilters(
   category: string, 
+  limit: number, 
+  skip: number,
+  priceBorders: [number, number], 
+  sortObj: ISortObj,
   type?: string, 
-  priceBorders?: [number, number], 
-  sortObj?: ISortObj
+  
+  
 ) {
 
-  const products = await ProductModel
+  let products = await ProductModel
       .find({ category })
       .populate('item_id') 
-      .sort(sortObj);
+      .sort(sortObj)
+      .skip(skip)     // Пропустити товари
+      .limit(limit);  // Взяти певну кількість товарів
 
-  let filteredProducts = products;
-
-  if (priceBorders) {
-    filteredProducts = filteredProducts.filter(product => {
+    products = products.filter(product => {
       const item = product.item_id as any;
       return item.price >= priceBorders[0] && item.price <= priceBorders[1];
     });
-  }
 
   if (type) {
-    filteredProducts = filteredProducts.filter(product => {
+    products = products.filter(product => {
       const item = product.item_id as any;
       return item.type === type;
     });
   }
 
-  console.log(filteredProducts)
-  console.log(this.removeNesting(filteredProducts).map((product: any) => new ProductCatalog(product)))
-  return this.removeNesting(filteredProducts).map((product: any) => new ProductCatalog(product));
+  return this.removeNesting(products).map((product: any) => new ProductCatalog(product));
 }
+
 
 
     async createComponent(componentData: IComponent) {

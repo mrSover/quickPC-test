@@ -3,8 +3,9 @@ import marketService from '../service/market-service';
 import { IComponent } from '../models/component-model';
 import { ISortObj } from '../models/custom-types';
 import filesService from "../service/file-service";
+import { error } from 'console';
 
-class MarketController {
+class MarketController { 
 
     async getProducts(req: Request, res: Response, next: NextFunction) {
         try {
@@ -12,17 +13,18 @@ class MarketController {
             const type = req.query.type as string;
             const minPrice = Number(req.query.minPrice) || 0;
             const maxPrice = Number(req.query.maxPrice) || Infinity;
-            const sortValue = req.query.sortValue as string || 'is_hot' ;
+            const sortValue = req.query.sortValue as string || 'is_hot';
             const sortDirection: 1 | -1 = (Number(req.query.sortDirection) || 1) as 1 | -1;
             const sortObj: ISortObj = { [sortValue]: sortDirection };
+            const limit = Number(req.query.limit) || 10;
+            const skip = Number(req.query.skip) || 0;
     
-            var products;
-            console.log({ category, type, minPrice, maxPrice, sortObj });
+            let products;
     
             if (category) {
-                products = await marketService.getProductsByFilters(category, type, [minPrice, maxPrice], sortObj);
+                products = await marketService.getProductsByFilters(category, limit, skip, [minPrice, maxPrice], sortObj, type);
             } else {
-                products = await marketService.getAllProducts(sortObj);
+                products = await marketService.getAllProducts(sortObj, limit, skip);
             }
     
             return res.status(200).json(products);
@@ -31,6 +33,7 @@ class MarketController {
             next(e);
         }
     }
+    
 
     // async getHotProducts(req: Request, res: Response, next: NextFunction) {
     //     try {
