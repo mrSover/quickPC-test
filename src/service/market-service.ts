@@ -4,6 +4,7 @@ import { ComputerModel, IComputer } from '../models/computer-model';
 import { ProductModel } from '../models/product-model';
 import { ISortObj } from '../models/custom-types';
 import ProductCatalog from '../dtos/product-catalog-dto';
+import ProductSingle from '../dtos/product-item-dto';
 
 class MarketService {
 
@@ -18,10 +19,10 @@ async getAllProducts(sortObj: ISortObj) {
 
 async getProductById(id: string) {
   const product = await ProductModel
-      .find({_id: id})
+      .findById(id)
       .populate('item_id')
 
-      return this.removeNesting(product).map((product: any) => new ProductCatalog(product));
+      return new ProductSingle(this.removeNesting(product));
 }
 
 async getProductsByFilters(
@@ -52,6 +53,8 @@ async getProductsByFilters(
     });
   }
 
+  console.log(filteredProducts)
+  console.log(this.removeNesting(filteredProducts).map((product: any) => new ProductCatalog(product)))
   return this.removeNesting(filteredProducts).map((product: any) => new ProductCatalog(product));
 }
 
@@ -86,17 +89,18 @@ async getProductsByFilters(
         return data.map(item => {
           const itemData = JSON.parse(JSON.stringify(item.item_id as any));
           return {
+            ...itemData,
             _id: item._id,
-            category: item.category,
-            ...itemData
+            category: item.category, 
           };
         });
       } else {
         const itemData = JSON.parse(JSON.stringify(data.item_id as any));
         return {
+          ...itemData,
           _id: data._id,
           category: data.category,
-          ...itemData
+          
         };
       }
     }

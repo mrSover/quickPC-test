@@ -7,6 +7,7 @@ export default class ProductSingle {
     description: string;
     type: string;
     price: number;
+    is_on_sale: boolean;
     is_hot: boolean;
     img: string;
 
@@ -18,6 +19,7 @@ export default class ProductSingle {
         this.description = model.description
         this.type = model.type
         this.price = model.price
+        this.is_on_sale = model.is_on_sale;
         this.is_hot = model.is_hot
         this.img = model.img
     }
