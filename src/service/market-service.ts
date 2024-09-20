@@ -8,15 +8,18 @@ import ProductSingle from '../dtos/product-item-dto';
 
 class MarketService {
 
-async getAllProducts(sortObj: ISortObj, limit: number, skip: number) {
+async getAllProducts(sortObj: ISortObj, from: number, to: number) {
     const products = await ProductModel
         .find()
         .populate('item_id')
         .sort(sortObj)
-        .skip(skip)
-        .limit(limit)
 
-      return this.removeNesting(products).map((product: any) => new ProductCatalog(product));
+        const result = ( this
+          .removeNesting(products)
+          .map((product: any) => new ProductCatalog(product)))
+          .slice(from, to);
+
+      return result;
     }
 
 async getProductById(id: string) {
@@ -29,8 +32,8 @@ async getProductById(id: string) {
 
 async getProductsByFilters(
   category: string, 
-  limit: number, 
-  skip: number,
+  from: number, 
+  to: number,
   priceBorders: [number, number], 
   sortObj: ISortObj,
   type?: string, 
@@ -42,8 +45,6 @@ async getProductsByFilters(
       .find({ category })
       .populate('item_id') 
       .sort(sortObj)
-      .skip(skip)     // Пропустити товари
-      .limit(limit);  // Взяти певну кількість товарів
 
     products = products.filter(product => {
       const item = product.item_id as any;
@@ -57,7 +58,12 @@ async getProductsByFilters(
     });
   }
 
-  return this.removeNesting(products).map((product: any) => new ProductCatalog(product));
+  const result = ( this
+    .removeNesting(products)
+    .map((product: any) => new ProductCatalog(product)))
+    .slice(from, to);
+
+  return result
 }
 
 
