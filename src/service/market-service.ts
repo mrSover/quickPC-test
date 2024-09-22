@@ -14,12 +14,23 @@ async getAllProducts(sortObj: ISortObj, from: number, to: number) {
         .populate('item_id')
         .sort(sortObj)
 
+        const prices = products.map(product => {
+          const item = product.item_id as any;
+          return item.price;
+        });
+      
+        const minPrice = Math.min(...prices);
+        const maxPrice = Math.max(...prices);
+        const count =products.length
+
         const result = ( this
           .removeNesting(products)
           .map((product: any) => new ProductCatalog(product)))
           .slice(from, to);
 
-      return result;
+          
+
+      return {count, minPrice, maxPrice, result};
     }
 
 async getProductById(id: string) {
@@ -36,20 +47,18 @@ async getProductsByFilters(
   to: number,
   priceBorders: [number, number], 
   sortObj: ISortObj,
-  type?: string, 
-  
-  
+  type?: string
 ) {
 
   let products = await ProductModel
-      .find({ category })
-      .populate('item_id') 
-      .sort(sortObj)
+    .find({ category })
+    .populate('item_id') 
+    .sort(sortObj);
 
-    products = products.filter(product => {
-      const item = product.item_id as any;
-      return item.price >= priceBorders[0] && item.price <= priceBorders[1];
-    });
+  products = products.filter(product => {
+    const item = product.item_id as any;
+    return item.price >= priceBorders[0] && item.price <= priceBorders[1];
+  });
 
   if (type) {
     products = products.filter(product => {
@@ -58,12 +67,23 @@ async getProductsByFilters(
     });
   }
 
-  const result = ( this
+  const prices = products.map(product => {
+    const item = product.item_id as any;
+    return item.price;
+  });
+
+  const minPrice = Math.min(...prices);
+  const maxPrice = Math.max(...prices);
+  const count = products.length;
+
+  const result = this
     .removeNesting(products)
-    .map((product: any) => new ProductCatalog(product)))
+    .map((product: any) => new ProductCatalog(product))
     .slice(from, to);
 
-  return result
+
+
+  return { count, minPrice, maxPrice, result };
 }
 
 
