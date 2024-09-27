@@ -12,8 +12,7 @@ const app: Express = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
-app.use('/authapi', router);
-app.use('/marketapi', router)
+app.use('/api', router);
 app.use(errorMiddleware);
 
 const start = async () => {
