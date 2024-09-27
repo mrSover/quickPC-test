@@ -4,7 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import router from '../api/router/index';
-import errorMiddleware from '../src/middlewares/error-middleware';
+import errorMiddleware from '../api/middlewares/error-middleware';
 
 const PORT: number = Number(process.env.PORT) || 5000;
 const app: Express = express();
