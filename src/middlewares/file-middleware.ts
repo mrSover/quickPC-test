@@ -1,4 +1,4 @@
-import multer, { FileFilterCallback } from 'multer';
+import multer from 'multer';
 import { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import fs from 'fs';
@@ -11,10 +11,10 @@ const storage = multer.diskStorage({
             fs.mkdirSync(uploadsPath, { recursive: true });
         }
 
-        cb(null, uploadsPath); 
+        cb(null, uploadsPath);
     },
     filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
-        const uniqueFilename = '' + Date.now();  
+        const uniqueFilename = `${Date.now()}`;  
         cb(null, uniqueFilename);
     }
 });
