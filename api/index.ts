@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 dotenv.config();
 app.use(express.json());
 
-const mongoURI = process.env.DB_URL;
+const mongoURL = process.env.DB_URL;
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!');
@@ -16,10 +16,10 @@ app.get('/', (req: Request, res: Response) => {
 
 const start = async () => {
   try {
-    if (!mongoURI) {
+    if (!mongoURL) {
       throw new Error('DB_URL is not defined in the environment variables');
     }
-    await mongoose.connect(mongoURI)
+    await mongoose.connect(mongoURL)
     console.log("connected to db")
   } catch (error) {
     console.log(error)
