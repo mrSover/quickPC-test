@@ -1,0 +1,31 @@
+.eventBoard__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 70vh;
+}
+
+.eventBoard__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.eventBoard__item {
+  box-sizing: border-box;
+  border: 1px solid navy;
+  width: 400px;
+  height: 400px;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: center;
+}
