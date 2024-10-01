@@ -3,8 +3,8 @@ import express, { Express } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
-import router from '../api/router/index';
-import errorMiddleware from '../api/middlewares/error-middleware';
+import router from './router/index';
+import errorMiddleware from './middlewares/error-middleware';
 
 const PORT: number = Number(process.env.PORT) || 5000;
 const app: Express = express();
