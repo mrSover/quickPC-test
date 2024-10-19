@@ -1,9 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import marketService from '../service/market-service';
 import { IComponent } from '../models/component-model';
-import { ISortObj } from '../models/custom-types';
 import filesService from "../service/file-service";
-import { error } from 'console';
 
 class MarketController { 
 
