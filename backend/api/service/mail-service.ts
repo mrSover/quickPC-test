@@ -16,18 +16,18 @@ class MailService {
     }
 
     async sendActivationMail(to: string, link: string): Promise<void> {
-        // await this.transporter.sendMail({
-        //     from: process.env.SMTP_USER,
-        //     to,
-        //     subject: 'Account activation ' + process.env.API_URL,
-        //     text: '',
-        //     html: `
-        //         <div>
-        //             <h1>For activation your account, follow the link</h1>
-        //             <a href="${link}">${link}</a>
-        //         </div>
-        //     `
-        // });
+        await this.transporter.sendMail({
+            from: process.env.SMTP_USER,
+            to,
+            subject: 'Account activation ' + process.env.API_URL,
+            text: '',
+            html: `
+                <div>
+                    <h1>For activation your account, follow the link</h1>
+                    <a href="${link}">${link}</a>
+                </div>
+            `
+        });
     }
 }
 
